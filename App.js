@@ -1,21 +1,70 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  ScrollView,
+  FlatList,
+} from 'react-native';
+
+import GoalInput from './components/GoalInput';
+import GoalItem from './components/GoalItem';
 
 export default function App() {
+  const [courseGoals, setCourseGoals] = useState([]);
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  const addGoalHandler = (enteredGoal) => {
+    setCourseGoals((currentGoals) => [
+      ...currentGoals,
+      { id: Math.random().toString(), value: enteredGoal },
+    ]);
+
+    setShowAddModal(!showAddModal);
+  };
+
+  const deleteItemHandler = (id) => {
+    setCourseGoals((goalsList) => goalsList.filter((goal) => goal.id !== id));
+  };
+
+  const modalHandler = () => {
+    setShowAddModal(!showAddModal);
+  };
+
+  const cancelAddItemHandler = () => {
+    setShowAddModal(!showAddModal);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={styles.screen}>
+      <Button title='Add New Goal' onPress={modalHandler} />
+      <GoalInput
+        showModal={showAddModal}
+        onAddGoal={addGoalHandler}
+        onCancelGoal={cancelAddItemHandler}
+      />
+      <FlatList
+        keyExtractor={(item, index) => item.id}
+        data={courseGoals}
+        renderItem={(itemData) => (
+          <GoalItem
+            id={itemData.item.id}
+            onDelete={deleteItemHandler}
+            item={itemData.item}
+          />
+        )}
+        style={styles.listContainer}
+      ></FlatList>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  screen: { paddingTop: 50, padding: 10 },
+  listContainer: {
+    paddingBottom: 10,
   },
 });
