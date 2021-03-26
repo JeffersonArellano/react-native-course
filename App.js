@@ -15,21 +15,47 @@ import GoalItem from './components/GoalItem';
 
 export default function App() {
   const [courseGoals, setCourseGoals] = useState([]);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const addGoalHandler = (enteredGoal) => {
     setCourseGoals((currentGoals) => [
       ...currentGoals,
       { id: Math.random().toString(), value: enteredGoal },
     ]);
+
+    setShowAddModal(!showAddModal);
+  };
+
+  const deleteItemHandler = (id) => {
+    setCourseGoals((goalsList) => goalsList.filter((goal) => goal.id !== id));
+  };
+
+  const modalHandler = () => {
+    setShowAddModal(!showAddModal);
+  };
+
+  const cancelAddItemHandler = () => {
+    setShowAddModal(!showAddModal);
   };
 
   return (
     <View style={styles.screen}>
-      <GoalInput onAddGoal={addGoalHandler} />
+      <Button title='Add New Goal' onPress={modalHandler} />
+      <GoalInput
+        showModal={showAddModal}
+        onAddGoal={addGoalHandler}
+        onCancelGoal={cancelAddItemHandler}
+      />
       <FlatList
         keyExtractor={(item, index) => item.id}
         data={courseGoals}
-        renderItem={(itemData) => <GoalItem item={itemData.item} />}
+        renderItem={(itemData) => (
+          <GoalItem
+            id={itemData.item.id}
+            onDelete={deleteItemHandler}
+            item={itemData.item}
+          />
+        )}
         style={styles.listContainer}
       ></FlatList>
     </View>
