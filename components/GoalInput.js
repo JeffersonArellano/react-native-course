@@ -9,6 +9,7 @@ const GoalInput = (props) => {
   };
 
   const addGoalHandler = () => {
+    console.log(enteredGoal);
     props.onAddGoal(enteredGoal);
     setEnteredGoal();
   };
@@ -24,7 +25,7 @@ const GoalInput = (props) => {
         />
         <View style={styles.buttonGroup}>
           <View style={styles.button}>
-            <Button title='cancel' color='red' onPress={props.onCancelGoal} />
+            <Button title='Cancel' color='red' onPress={props.onCancelGoal} />
           </View>
           <View style={styles.button}>
             <Button title='Add' onPress={addGoalHandler} />
